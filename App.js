@@ -2,6 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+import {createStackNavigator} from '@react-navigation/stack'
+import {NavigationContainer} from '@react-navigation/native';
+import OnboardingScreen from './pages/OnboardingScreen';
+import HomeScreen from './pages/HomeScreen';
+
+const AppStack = createStackNavigator();
+
+
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -19,7 +27,7 @@ export default function App() {
     }
 
     prepare();
-  }, []);
+  }, []); 
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
@@ -32,10 +40,23 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    
+    <NavigationContainer onLayout={onLayoutRootView} >
+
+      <AppStack.Navigator headermode="none">
+        
+        <AppStack.Screen  name="Onboarding" component={OnboardingScreen} />
+        <AppStack.Screen  name="Home" component={HomeScreen} />
+
+      </AppStack.Navigator>
+    </NavigationContainer>  
+
+    
+    
+    /* <View style={styles.container} onLayout={onLayoutRootView}>
+        <Text>Open up App.js to start working on your app!</Text>
+        
+      </View> */
   );
 }
 
