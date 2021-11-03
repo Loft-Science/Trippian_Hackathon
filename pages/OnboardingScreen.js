@@ -13,7 +13,7 @@ const Dots = ({selected}) => {
             style={{
                 width:6,
                 height: 6,
-                marginHorizontal: 3,
+                marginHorizontal: 6,
                 backgroundColor
             }}
         />
