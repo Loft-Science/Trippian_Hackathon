@@ -1,13 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SplashScreen from 'expo-splash-screen';
 import {createStackNavigator} from '@react-navigation/stack'
 import {NavigationContainer} from '@react-navigation/native';
 import OnboardingScreen from './pages/OnboardingScreen';
 import HomeScreen from './pages/HomeScreen';
 
 const AppStack = createStackNavigator();
+
 
 console.ignoredYellowBox = [
   'Remote debugger is in a background tab which may cause apps to perform slowly. Fix this by foregrounding the tab (or opening it in a separate window).',
@@ -16,29 +18,65 @@ console.ignoredYellowBox = [
 
 
 export default function App() {
-  
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [appIsFirst, setAppIsFirst] = useState(true);
 
-  return (
-    
-    <NavigationContainer  >
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        await new Promise(resolve => setTimeout(resolve, 700));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);        
+      }
+    }
+    prepare();
+  }, []); 
+  const showHome = useCallback(async () => {
+    try {
+      await AsyncStorage.setItem("@trippian_first", "true");
+      setAppIsFirst(false);
+    }
+    catch (e) {
+      console.warn(e);
+    }
+  })
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {      
+      try {
+        // uncomment code to test first time running
+        // await AsyncStorage.clear();
+        const value = await AsyncStorage.getItem("@trippian_first");
+        if (value!==null) {
+          setAppIsFirst(false);          
+        } else {
+          await AsyncStorage.setItem("@trippian_first", "true");
+        }
+        await SplashScreen.hideAsync();
+      }
+      catch (e) {
+        console.warn(e);
+      }
+    }
+  }, [appIsReady]);
 
-      <AppStack.Navigator screenOptions={{
-              headerShown: false
-            }}>
-        
-        <AppStack.Screen  name="Onboarding" component={OnboardingScreen} />
-        <AppStack.Screen  name="Home" component={HomeScreen} />
+  if (!appIsReady) {
+    return null;
+  }
+  if (appIsFirst) {
+    return (<OnboardingScreen onLayout={onLayoutRootView} showHome={showHome}/>);
+  } else {
+    return (
+      <NavigationContainer onLayout={onLayoutRootView} >
+        <AppStack.Navigator headermode="none">
+          <AppStack.Screen  name="Home" component={HomeScreen} />
+        </AppStack.Navigator>
+      </NavigationContainer>  
+    );
+  }
 
-      </AppStack.Navigator>
-    </NavigationContainer>  
-
-    
-    
-    /* <View style={styles.container} onLayout={onLayoutRootView}>
-        <Text>Open up App.js to start working on your app!</Text>
-        
-      </View> */
-  );
 }
 
 const styles = StyleSheet.create({
