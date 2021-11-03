@@ -47,15 +47,16 @@ const Done = ({...props}) => (
     </TouchableOpacity>
 );
 
-const OnboardingScreen = ({navigation}) => {
+const OnboardingScreen = (props) => {
     return (
         <Onboarding
         SkipButtonComponent={Skip}
         NextButtonComponent={Next}
         DoneButtonComponent={Done}
         DotComponent={Dots}
-        onSkip={() => navigation.replace("Home")}
-        onDone={() => navigation.navigate("Home")}
+        onSkip={() => props.showHome()}
+        onDone={() => props.showHome()}
+        onLayout={props.onLayout()}
         pages={[
           {
             backgroundColor: '#a6e4d0',
