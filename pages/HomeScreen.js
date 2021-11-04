@@ -37,7 +37,7 @@ const HomeScreen = ({navigation}) => {
 
       let [fontsLoaded] = useFonts({
         'Font-Title': require('../assets/fonts/Fruktur-Regular.ttf'),
-        'Font-text': require('../assets/fonts/ZenKurenaido-Regular.ttf'),
+        'Font-Text': require('../assets/fonts/ZenKurenaido-Regular.ttf'),
 
       });
 
@@ -190,30 +190,75 @@ const HomeScreen = ({navigation}) => {
                     <ScrollView style={{height: 260}} horizontal indicatorStyle={"white"}> 
                     <TouchableOpacity style={styles.BestContainer}>
                         <ImageBackground
-                        source={require('../assets/best_activity1.jpg')}
-                        style={styles.Best_image}
-                    /><Text style={styles.middleButtonText}>Life</Text></TouchableOpacity> 
+                        source={require('../assets/place1.jpg')}
+                        style={styles.Place_image}
+                    />
+                    
+                    <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14 }}>
+                    <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text></View></TouchableOpacity> 
 
 
                     <TouchableOpacity style={styles.BestContainer}>
                     <ImageBackground
-                        source={require('../assets/best_activity2.jpg')}
-                        style={styles.Best_image}
+                        source={require('../assets/place2.jpg')}
+                        style={styles.Place_image}
                     />
-                        <Text style={styles.middleButtonText}>재테크</Text></TouchableOpacity> 
+                        <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14 }}>
+                    <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text></View></TouchableOpacity> 
                     <TouchableOpacity style={styles.BestContainer}>
                     <ImageBackground
-                        source={require('../assets/best_activity3.jpg')}
-                        style={styles.Best_image}
+                        source={require('../assets/place3.jpg')}
+                        style={styles.Place_image}
                     />
-                        <Text style={styles.middleButtonText}>반려견</Text></TouchableOpacity> 
+                        <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14 }}>
+                    <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text></View></TouchableOpacity> 
                     <TouchableOpacity style={styles.BestContainer}>
                     <ImageBackground
                         source={require('../assets/best_activity4.jpg')}
-                        style={styles.Best_image}
+                        style={styles.Place_image}
                     />
-                        <Text style={styles.middleButtonText}>꿀팁 찜</Text></TouchableOpacity>
+                        <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14 }}>
+                    <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text></View></TouchableOpacity>
                     </ScrollView>
+
+
+
+                    <Text style={styles.Trippian_Recommended}>Become a Trippian</Text>
+
+                    <ScrollView style={{height: 260}} horizontal indicatorStyle={"white"}> 
+                    <TouchableOpacity style={styles.BestContainer}>
+                        <ImageBackground
+                        source={require('../assets/place1.jpg')}
+                        style={styles.Place_image}
+                    />
+                    
+                    <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14, backgroundColor:"#ccc" }}>
+                    </View></TouchableOpacity> 
+
+
+                    <TouchableOpacity style={styles.BestContainer}>
+                   
+                        <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14, backgroundColor:"#ccc" }}>
+                    </View></TouchableOpacity> 
+                    <TouchableOpacity style={styles.BestContainer}>
+                   
+                    <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14, backgroundColor:"#ccc" }}>
+                    </View></TouchableOpacity> 
+                    <TouchableOpacity style={styles.BestContainer}>
+                   
+                    <View
+                        style={{ flex: 1, alignItems: 'flex-end', padding: 5, paddingRight: 14, backgroundColor:"#ccc" }}>
+                    </View></TouchableOpacity>
+                    </ScrollView>
+
+
                 
 
 
@@ -264,7 +309,6 @@ const styles = StyleSheet.create({
 
     inner_container:{
         flex:2,
-        backgroundColor:"yellow",
         
     },
 
@@ -280,6 +324,7 @@ const styles = StyleSheet.create({
         fontWeight: '700', 
         marginTop:25, 
         marginLeft:20,
+       
     },
 
     line: {
@@ -323,6 +368,7 @@ const styles = StyleSheet.create({
         fontWeight: '700', 
         marginTop:50, 
         marginLeft:20,
+        
 
     },
 
@@ -359,6 +405,23 @@ const styles = StyleSheet.create({
         color:"black",
         fontWeight: '700', 
         marginLeft: 20,
+        
+
+    },
+
+    Place_image: {
+        height: 180,
+        width: 300,
+        opacity: 0.6,      
+        position: 'absolute',
+
+    },
+
+    RecommendText: {
+        
+        marginTop:10,
+        fontFamily: "Font-Text",
+        fontSize: 20,
 
     }
 
