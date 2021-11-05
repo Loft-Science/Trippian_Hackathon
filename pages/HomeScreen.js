@@ -6,6 +6,7 @@ import { Button, Icon } from "react-native-elements";
 import { useFonts } from 'expo-font';
 import AddressPage from "./AddressPage";
 import Animated from 'react-native-reanimated';
+import BottomSheet from "../components/BottomSheet";
 import {
     BottomSheetModal,
     BottomSheetModalProvider,
@@ -45,9 +46,32 @@ const HomeScreen = ({ navigation }) => {
         { src: require("../assets/profile6.jpg"), key: 6, name: "Chris" },
     ]);
 
+    const [towns, settowns] = useState([
+        { src: require("../assets/best_activity2.jpg"),  key: 1, title: "Jamsil Baseball Stadium", place: "Korea, Seoul", people: "6-14 Group"},
+        { src: require("../assets/best_activity1.jpg"),  key: 2, title: "Taekwondo", place: "Korea, Seoul", people: "8 Group"},
+        { src: require("../assets/best_activity3.jpg"),  key: 3, title: "HanRiver", place: "Korea, Seoul", people: "Many Group"},
+        { src: require("../assets/best_activity4.jpg"),  key: 4, title: "Jamsil Baseball Stadium", place: "Korea, Seoul", people: "6-14 Group"},
+        
+    ])
+
+
+
+    const [places, setplaces] = useState([
+        { src: require("../assets/place1.jpg"),  key: 1, title: "coffeowa in sungsu", place: "sungsu, Seoul", content: "I recommended here first when you \n want to go home coffee in Seoul!"},
+        { src: require("../assets/place2.jpg"),  key: 2, title: "river place of town", place: "Korea, Seoul", people: "I recommended here first when you \n want to go home coffee in Seoul!"},
+        { src: require("../assets/place3.jpg"),  key: 3, title: "HanRiver", place: "Korea, Seoul", people: "I recommended here first when you \n want to go home coffee in Seoul!"},
+        { src: require("../assets/place2.jpg"),  key: 4, title: "Jamsil Baseball Stadium", place: "Korea, Seoul", people: "I recommended here first when you \n want to go home coffee in Seoul!"},
+        
+    ])
+
     let [fontsLoaded] = useFonts({
         'Font-Title': require('../assets/fonts/Fruktur-Regular.ttf'),
         'Font-Text': require('../assets/fonts/ZenKurenaido-Regular.ttf'),
+        'Font-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
+        'Font-Light' : require('../assets/fonts/Roboto-Light.ttf'),
+        'Font-Regular' : require('../assets/fonts/Roboto-Regular.ttf'),
+        'Font-Medium' : require('../assets/fonts/Roboto-Medium.ttf'),
+
     });
 
     const dismiss = useCallback(() => {
@@ -81,8 +105,8 @@ const HomeScreen = ({ navigation }) => {
 
                     <ImageBackground
                         source={require("../assets/Home_back_1.jpg")}
-                        style={{ width: "100%", height: "100%", flex: 1, resizeMode: "cover", justifyContent: "center", backgroundColor: "black" }}
-                        imageStyle={{ opacity: 0.6 }}
+                        style={{ width: "100%", height: "100%", flex: 1, resizeMode: "cover", justifyContent: "center", backgroundColor: "black", borderBottomLeftRadius:40, borderBottomRightRadius:40 }}
+                        imageStyle={{ opacity: 0.6, borderBottomLeftRadius:40, borderBottomRightRadius:40 }}
                     >
                         <Image source={require("../assets/trippian_logo.png")} style={{ marginTop: 18, marginLeft: 18, height: 60, width: 100 }}></Image>
                         <MaterialCommunityIcons size={30} name="weather-cloudy" color={"#fff"} style={{ alignSelf: "flex-end", marginRight: 20 }} />
@@ -111,7 +135,8 @@ const HomeScreen = ({ navigation }) => {
 
                 <View style={styles.inner_container}>
                     
-                    <Text style={styles.Trippian_title}>Meet Popular Trippians</Text>
+                    <Text style={styles.Trippian_title}>Meet and Chat !</Text>
+                    <Text style={styles.Trippian_description}>here are Trippians read to hang out with you</Text>
 
                     <FlatList
                         horizontal={true}
@@ -125,15 +150,15 @@ const HomeScreen = ({ navigation }) => {
                                         /* Important to set a key for list items,
                                    but it's wrong to use indexes as keys, see below */
                                         style={{
-                                            width: 120,
-                                            height: 120,
+                                            width: 90,
+                                            height: 90,
                                             borderWidth: 2,
                                             borderRadius: 100,
 
                                             resizeMode: "cover",
-                                            marginLeft: 18,
+                                            marginLeft: 20,
                                             marginTop: 22,
-                                            marginBottom: 5,
+                                            marginBottom: 6,
                                         }}
                                     />
 
@@ -147,56 +172,100 @@ const HomeScreen = ({ navigation }) => {
 
                     <Text style={styles.Trippian_Town}>Best Thing To Do in Town</Text>
 
-                    <ScrollView style={{ height: 260 }} horizontal indicatorStyle={"white"}>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/best_activity1.jpg")} style={styles.Best_image} />
-                            <Text style={styles.middleButtonText}>Beach</Text>
-                        </TouchableOpacity>
+                    <FlatList
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        data={towns}
+                        renderItem={({ item }) => {
+                            return (
+                                <View style={{height: 260}} horizontal indicatorStyle={"white"}>
 
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/best_activity2.jpg")} style={styles.Best_image} />
-                            <Text style={styles.middleButtonText}>Camping</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/best_activity3.jpg")} style={styles.Best_image} />
-                            <Text style={styles.middleButtonText}>In the sky</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/best_activity4.jpg")} style={styles.Best_image} />
-                            <Text style={styles.middleButtonText}>Boarding</Text>
-                        </TouchableOpacity>
-                    </ScrollView>
+                            <TouchableOpacity style={styles.BestContainer} >
+                                    <ImageBackground
+                                        source={item.src} /* Use item to set the image source */
+                                        /* Important to set a key for list items,
+                                   but it's wrong to use indexes as keys, see below */
+                                        style={{
+                                            width: 300,
+                                            height: 130,
+                                            
+                                            borderRadius: 10,
 
-                    <Text style={styles.Trippian_Recommended}>Recommended places from people like you!</Text>
+                                           resizeMode:"cover",
+                                            marginLeft: 20,
+                                            marginTop: 22,
+                                            
+                                        }}
+                                    />
+                                    </TouchableOpacity>
 
-                    <ScrollView style={{ height: 260 }} horizontal indicatorStyle={"white"}>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/place1.jpg")} style={styles.Place_image} />
+                                    <Text style={styles.town_name}>{item.title}</Text>
 
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14 }}>
+                                    <View style={styles.cardText}>
+                                    <Text style={styles.town_place}>{item.place}</Text>
+                                    <Icon style={{marginLeft: 28, marginTop:5}} name="people" type="octicons" color="#Cccccc" size={20} />
+                                    <Text style={styles.town_people}>{item.people}</Text>
+                                    </View>
+
+
+                                </View>
+                            );
+                        }}
+                    >
+                        {" "}
+                    </FlatList>
+
+
+                
+
+                    <Text style={styles.Trippian_Recommended}>The places to be definetly </Text>
+                    <Text style={styles.Trippian_Recommended}>from people like you!</Text>
+
+                    <FlatList
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        data={places}
+                        renderItem={({ item }) => {
+                            return (
+                                <View style={{height: 260}} horizontal indicatorStyle={"white"}>
+
+                            <TouchableOpacity style={[styles.ShadowContainer,shadow]}>
+                                <View  > 
                                 <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text>
-                            </View>
-                        </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/place2.jpg")} style={styles.Place_image} />
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14 }}>
-                                <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/place3.jpg")} style={styles.Place_image} />
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14 }}>
-                                <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/best_activity4.jpg")} style={styles.Place_image} />
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14 }}>
-                                <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </ScrollView>
+                                <Text style={styles.town_name}>{item.title}</Text>
+
+                                    <View style={styles.cardText}>
+                                    <Text style={styles.town_place}>{item.place}</Text>
+                                    <Icon style={{marginLeft: 28, marginTop:5}} name="people" type="octicons" color="#Cccccc" size={20} />
+                                    <Text style={styles.town_people}>{item.people}</Text>
+                                    </View>
+                                </View>
+
+                                
+                                    
+                                    </TouchableOpacity>
+
+                                    
+
+
+                                </View>
+                            );
+                        }}
+                    >
+                        {" "}
+                    </FlatList>
+
+
+
+
+
+
+
+
+
+
+
 
                     <Text style={styles.Trippian_Recommended}>Become a Trippian</Text>
 
@@ -233,6 +302,17 @@ const HomeScreen = ({ navigation }) => {
     );
 };
 
+const shadow = {
+    shadowColor: 'black',
+    shadowRadius: 20,
+    shadowOpacity: 0.7,
+    elevation: 10,
+    shadowOffset: {
+      width: 5,
+      height: 5
+    }
+  }
+
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#fff",
@@ -250,13 +330,15 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         paddingRight: 10,
         color: "white",
+        fontFamily: 'Font-Light'
     },
 
     header_container: {
         flex: 1,
-        backgroundColor: "#ccc",
+        backgroundColor: "#fff",
         zIndex: 1,
-        position: "relative"
+        position: "relative",
+        
     },
 
     inner_container: {
@@ -272,9 +354,18 @@ const styles = StyleSheet.create({
     Trippian_title: {
         fontSize: 17,
         color: "black",
-        fontWeight: "700",
+        
         marginTop: 25,
         marginLeft: 20,
+        fontFamily: 'Font-Bold'
+    },
+
+    Trippian_description:{
+        fontSize: 13,
+        color:"black",
+        marginLeft: 20,
+        fontFamily: 'Font-Light'
+
     },
 
     line: {
@@ -283,6 +374,8 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline",
         fontSize: 18,
         marginBottom: 20,
+        fontFamily: 'Font-Regular'
+
     },
     goBtn: {
         height: 60,
@@ -297,27 +390,65 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     trippian_name: {
-        fontWeight: "700",
+        
 
         color: "black",
         alignSelf: "center",
-        marginLeft: 18,
+        marginLeft: 20,
+        fontFamily: 'Font-Medium'
     },
     Trippian_Town: {
         fontSize: 17,
         color: "black",
-        fontWeight: "700",
+        
         marginTop: 50,
         marginLeft: 20,
+        fontFamily: 'Font-Bold'
+    },
+
+    town_name: {
+
+        fontSize: 15,
+        color: "black",
+        marginLeft: 30,
+       
+        fontFamily: "Font-Title"
+
+
+    },
+
+    town_place: {
+        fontSize: 12,
+        color: "#cccccc",
+        marginLeft: 35,
+        marginTop: 8,
+        fontFamily: "Font-Bold"
+
     },
 
     BestContainer: {
         backgroundColor: "#FFF",
-        height: 180,
-        width: 300,
+        height: 170,
+        width: 320,
+        
         position: "relative",
-        marginLeft: 20,
-        marginTop: 20,
+        
+        
+        
+    },
+
+    cardText:{
+        flexDirection:"row"
+
+    },
+
+    town_people: {
+        fontSize: 12,
+        color: "#cccccc",
+        marginLeft: 8,
+        marginTop: 8,
+        fontFamily: "Font-Bold"
+
     },
 
     Best_image: {
@@ -336,8 +467,9 @@ const styles = StyleSheet.create({
     Trippian_Recommended: {
         fontSize: 17,
         color: "black",
-        fontWeight: "700",
+        
         marginLeft: 20,
+        fontFamily: 'Font-Bold'
     },
 
     Place_image: {
@@ -376,6 +508,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+
+  ShadowContainer :{ 
+    width: 300,
+    height: 160,
+    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+    marginLeft: 20,
+    marginRight: 5,
+    marginTop: 25,
+
+  }
 
     
 

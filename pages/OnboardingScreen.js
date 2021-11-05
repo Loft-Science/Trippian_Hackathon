@@ -3,6 +3,8 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
 import Onboarding from 'react-native-onboarding-swiper';
 
+import { useFonts } from 'expo-font';
+
 const Dots = ({selected}) => {
     let backgroundColor;
 
@@ -48,6 +50,16 @@ const Done = ({...props}) => (
 );
 
 const OnboardingScreen = (props) => {
+
+
+
+    let [fontsLoaded] = useFonts({
+        'Font-Black': require('../assets/fonts/Roboto-Black.ttf'),
+
+    });
+
+
+
     return (
         <Onboarding
         SkipButtonComponent={Skip}
@@ -59,22 +71,22 @@ const OnboardingScreen = (props) => {
         onLayout={props.onLayout()}
         pages={[
           {
-            backgroundColor: '#a6e4d0',
+            backgroundColor: '#C882AF',
             image: <Image source={require('../assets/onboarding-img1.png')} />,
-            title: 'Connect to the World',
-            subtitle: 'A New Way To Connect With The World',
+            title: <Text style={styles.textContainer}>   Meet Your{"\n"}  Local Guide {"\n"}      Friend </Text>,
+            subtitle: ' ',
           },
           {
             backgroundColor: '#fdeb93',
             image: <Image source={require('../assets/onboarding-img2.png')} />,
-            title: 'Share Your Favorites',
-            subtitle: 'Share Your Thoughts With Similar Kind of People',
+            title: <Text style={styles.textContainer}> Experience{"\n"}       New {"\n"}    Culture </Text>,
+            subtitle: ' ',
           },
           {
-            backgroundColor: '#e9bcbe',
+            backgroundColor: '#85C1D3',
             image: <Image source={require('../assets/onboarding-img3.png')} />,
-            title: 'Become The Star',
-            subtitle: "Let The Spot Light Capture You",
+            title: <Text style={styles.textContainer}>      Be {"\n"}   Better {"\n"} Yourself </Text>, 
+            subtitle: "",
           },
         ]}
       />
@@ -89,4 +101,12 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center'
   },
+
+  textContainer: {
+
+    alignSelf:"center",
+    fontSize: 35,
+    marginTop: 20 ,
+    fontFamily:'Font-Black',   
+  }
 });
