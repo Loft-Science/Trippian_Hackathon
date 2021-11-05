@@ -1,117 +1,128 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Animated, Dimensions,StyleSheet, View } from "react-native";
-import { IconButton, Portal } from "react-native-paper";
+import React, { useEffect, useState, useCallback } from "react";
+import { StyleSheet, View, Modal, Pressable, Text, Dimensions, TextInput, Button } from "react-native";
+import * as Location from 'expo-location';
+import MapView from 'react-native-maps';
 
+const BottomSheet = (props,{children}) => {
+    const dismiss = (e) => {
+        props.onDismiss();
+    };
 
-
-const BottomSheet = ({show, onDismiss, children})=> {
-    const bottomSheetHeight = Dimensions.get("window").height * 0.5;
-    const deviceWidth = Dimensions.get("window").width;
-    const [open, setOpen] = useState(show)
-    const bottom = useRef(new Animated.Value(-bottomSheetHeight)).current;
-
-    useEffect(()=> {
-        if(show) {
-            setOpen(show);
-            Animated.timing(bottom, {
-                toValue: 0,
-                duration: 500,
-                useNativeDriver: false,
-            }).start();
-
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [address, onChangeAddress] = useState("");
+    const onSearch = useCallback(async () => {
+        let loc = await Location.geocodeAsync(address);
+        if (loc) {
+            if (loc.length>0) {
+                setLocation({
+                    latitude: loc[0].latitude,
+                    longitude: loc[0].longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421
+                });
+            } else {
+                setErrorMsg("Could not find this location");
+            }
         } else {
-            Animated.timing(bottom, {
-                toValue: -bottomSheetHeight,
-                duration: 500,
-                useNativeDriver: false,
-            }).start(()=>{
-                setOpen(false);
-
-            });
-
+            setErrorMsg("Could not find this location");
         }
-    }, [show])
-    if(!open){
-        return null;
+    })
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                setErrorMsg("Permission to access location was denied");
+                return;
+            }
 
-    }
-    return (
-    <Portal>
-        <Animated.View
-            style={styles.root, {height: bottomSheetHeight, bottom: bottom, shadowOffset: {
-                height :-3
-            }}, styles.common}>
-                <View style={styles.header,styles.common, 
-                {
-                    shadowOffset: {
-                height :-3,
-            }}}>
-                <View style={{
-                    width:40, 
-                    height:3,
-                    borderRadius: 1.5,
-                    position: "absolute",
-                     top: 8, 
-                     left:(deviceWidth-40)/2,
-                     zIndex: 10,
-                     backgroundColor :"#ccc", }}/>
+            let loc = await Location.getCurrentPositionAsync({});
+            if (loc) {
+                if (loc.coords) {
+                    setLocation({
+                        latitude: loc.coords.latitude,
+                        longitude: loc.coords.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421
+                    });
+                } else {
+                    setErrorMsg("Could not find this location");
+                }
+            } else {
+                setErrorMsg("Could not find this location");
+            }
+        })();
+    }, []);
 
-                     <IconButton color="#85C1D3" icon="close" style={styles.closeIcon} onPress={onDismiss}/>
+    let text = "Waiting..";
 
-
+    if (errorMsg) {
+        return (
+            <Modal
+                animationType="slide"
+                visible={props.show}
+                onRequestClose={dismiss}
+            >
+                <View style={styles.container}>
+                    <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
+                    <Button title="Search" onPress={onSearch} />
+                    <Button title="Dismiss" onPress={dismiss} />
+                    <Text>{errorMsg}</Text>
                 </View>
-                {children}
-
-            </Animated.View>
-
-
-    </Portal>
-    );
+            </Modal>
+        )
+    } else if (location) {
+        return (
+            <Modal
+                animationType="slide"
+                visible={props.show}
+                onRequestClose={dismiss}
+            >
+                <View style={styles.container}>
+                    <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
+                    <Button title="Search" onPress={onSearch} />
+                    <Button title="Dismiss" onPress={dismiss} />
+                    <MapView style={styles.map} 
+                region={location}
+                />
+                </View>
+            </Modal>
+        );
+    } else {
+        return (
+            <Modal
+                animationType="slide"
+                visible={props.show}
+                onRequestClose={dismiss}
+            >
+                <View style={styles.container}>
+                    <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
+                    <Button title="Search" onPress={onSearch} />
+                    <Button title="Dismiss" onPress={dismiss} />
+                    <Text>{text}</Text>
+                </View>
+            </Modal>
+        )
+    }
 };
-
 
 export default BottomSheet;
 
 const styles = StyleSheet.create({
-    root: {
-        position: "absolute",
-        left: 0,
-        right: 0,
-        zIndex: 200,
-        backgroundColor: "#fff",
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        overflow: "hidden",
-      
+    input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
     },
-
-    header: {
-        height: 44,
-        backgroundColor: "#fff"
-
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-    common: {
-
-        shadowColor: "#000",
-        shadowOffset: {
-           
-            width: 0,
-        },
-        shadowOpacity: 0.24,
-        shadowRadius: 4,
-        elevation: 3,
-
+    map: {
+      width: Dimensions.get('window').width,
+      height: 200,
     },
-
-    closeIcon :{
-        position: "absolute",
-        right: 0,
-        top: 0,
-        zIndex: 10,
-
-
-
-    }
-
-
-})
+});

@@ -5,7 +5,6 @@ import { Provider } from "react-native-paper";
 import { Button, Icon } from "react-native-elements";
 import BottomSheet from "../components/BottomSheet";
 import { useFonts } from 'expo-font';
-import AddressPage from "./AddressPage";
 
 let todayWeather = 10 + 17;
 let todayCondition = "Cloudy";
@@ -38,12 +37,9 @@ const HomeScreen = ({ navigation }) => {
         return null;
     }
 
-    if (show) {
-        return (<AddressPage onDismiss={dismiss} />);
-    }
     return (
         <Provider>
-            <ScrollView style={styles.container}>
+            <ScrollView style={styles.container}>                
                 <View style={styles.header_container}>
                     <ImageBackground
                         source={require("../assets/Home_back_1.jpg")}
@@ -182,7 +178,11 @@ const HomeScreen = ({ navigation }) => {
                             <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14, backgroundColor: "#ccc" }}></View>
                         </TouchableOpacity>
                     </ScrollView>
-                </View>                
+                </View>
+                <BottomSheet
+                show={show}
+                onDismiss={dismiss}>
+                </BottomSheet>
             </ScrollView>
         </Provider>
     );
