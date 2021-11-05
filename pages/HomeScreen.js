@@ -13,6 +13,7 @@ import {
 
 
 
+
 let todayWeather = 10 + 17;
 let todayCondition = "Cloudy";
 
@@ -60,12 +61,11 @@ const HomeScreen = ({ navigation }) => {
         return null;
     }
 
-    if (show) {
-        return (<AddressPage onDismiss={dismiss} />);
-    }
     return (
+
         <BottomSheetModalProvider> 
             <ScrollView style={styles.container}>
+                <Provider>
 
             <BottomSheetModal
                         ref={bottomSheetModalRef}
@@ -76,8 +76,7 @@ const HomeScreen = ({ navigation }) => {
                     <Text> Awesome🎉</Text>
                   </View>  </BottomSheetModal>
 
-                
-                
+            
                 <View style={styles.header_container}>
 
                     <ImageBackground
@@ -219,12 +218,16 @@ const HomeScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </ScrollView>
 
-
-                    
                 </View>
 
-               
-                                
+
+                <BottomSheet
+                show={show}
+                onDismiss={dismiss}>
+                </BottomSheet>
+
+                </Provider>
+
             </ScrollView>
         </BottomSheetModalProvider>
     );
