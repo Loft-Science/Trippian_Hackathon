@@ -58,9 +58,9 @@ const HomeScreen = ({ navigation }) => {
 
     const [places, setplaces] = useState([
         { src: require("../assets/place1.jpg"),  key: 1, title: "coffeowa in sungsu", place: "sungsu, Seoul", content: "I recommended here first when you \n want to go home coffee in Seoul!"},
-        { src: require("../assets/place2.jpg"),  key: 2, title: "river place of town", place: "Korea, Seoul", people: "I recommended here first when you \n want to go home coffee in Seoul!"},
-        { src: require("../assets/place3.jpg"),  key: 3, title: "HanRiver", place: "Korea, Seoul", people: "I recommended here first when you \n want to go home coffee in Seoul!"},
-        { src: require("../assets/place2.jpg"),  key: 4, title: "Jamsil Baseball Stadium", place: "Korea, Seoul", people: "I recommended here first when you \n want to go home coffee in Seoul!"},
+        { src: require("../assets/place2.jpg"),  key: 2, title: "river place of town", place: "Korea, Seoul", content: "I recommended here first when you \n want to go home coffee in Seoul!"},
+        { src: require("../assets/place3.jpg"),  key: 3, title: "HanRiver", place: "Korea, Seoul", content: "I recommended here first when you \n want to go home coffee in Seoul!"},
+        { src: require("../assets/place2.jpg"),  key: 4, title: "Jamsil Baseball Stadium", place: "Korea, Seoul", content: "I recommended here first when you \n want to go home coffee in Seoul!"},
         
     ])
 
@@ -231,15 +231,48 @@ const HomeScreen = ({ navigation }) => {
 
                             <TouchableOpacity style={[styles.ShadowContainer,shadow]}>
                                 <View  > 
-                                <Text style={styles.RecommendText}>Don't miss this place{"\n"}I recommend!</Text>
+                                    <View style={{ flexDirection:"row"   }}>
+                                        <Image style={{
+                                            width: 60,
+                                            height: 60,
+                                            
+                                            borderRadius: 10,
 
-                                <Text style={styles.town_name}>{item.title}</Text>
+                                           resizeMode:"cover",
+                                           
+                                            
+                                        }}
+                                            source={item.src}> 
+                                           
+                                        
+                                         </Image>
 
-                                    <View style={styles.cardText}>
-                                    <Text style={styles.town_place}>{item.place}</Text>
-                                    <Icon style={{marginLeft: 28, marginTop:5}} name="people" type="octicons" color="#Cccccc" size={20} />
-                                    <Text style={styles.town_people}>{item.people}</Text>
+
+
+                                         <View>
+
+                                         <Text style={styles.place_name}>{item.title}</Text>
+                                         <View style={styles.cardText}>
+                                             
+                                   
+                                            <Icon style={{marginLeft: 15, marginTop:5}} name="people" type="octicons" color="#Cccccc" size={20} />
+                                            <Text style={styles.place_title}>{item.place}</Text>
+                                            </View>
+
+                                             
+                                         </View>
+
+
                                     </View>
+
+
+                                    <View>
+                                    <Text style={styles.place_content}>{item.content}</Text>
+                                    </View>
+                                
+                               
+
+                                   
                                 </View>
 
                                 
@@ -417,6 +450,23 @@ const styles = StyleSheet.create({
 
     },
 
+    place_name: {
+        fontSize: 15,
+        color: "black",
+        marginLeft: 15,
+        fontFamily: "Font-Bold"
+
+    },
+
+    place_title: {
+        fontSize: 12,
+        color: "#cccccc",
+        marginLeft: 5,
+        marginTop: 8,
+        fontFamily: "Font-Bold"
+
+    },
+
     town_place: {
         fontSize: 12,
         color: "#cccccc",
@@ -451,6 +501,15 @@ const styles = StyleSheet.create({
 
     },
 
+    place_content: {
+        fontSize: 14,
+        color: "#cccccc",
+        marginLeft: 8,
+        marginTop: 10,
+        fontFamily: "Font-Medium"
+
+    },
+
     Best_image: {
         height: 180,
         width: 300,
@@ -469,7 +528,8 @@ const styles = StyleSheet.create({
         color: "black",
         
         marginLeft: 20,
-        fontFamily: 'Font-Bold'
+        fontFamily: 'Font-Bold',
+        marginTop: 10,
     },
 
     Place_image: {
