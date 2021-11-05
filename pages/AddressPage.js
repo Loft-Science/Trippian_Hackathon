@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, Dimensions, TextInput, Button } from "react-native";
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
+import { Searchbar } from "react-native-paper";
 
 const AddressPage = (props) => {
     const [location, setLocation] = useState(null);
@@ -56,7 +57,13 @@ const AddressPage = (props) => {
     if (errorMsg) {
         return (
             <View style={styles.container}>
-                <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
+
+                        <Searchbar
+                        style={styles.input}
+                        placeholder="Search"
+                        onChangeText={onChangeAddress}
+                        value={address}
+                        />          
                 <Button title="Search" onPress={onSearch} />
                 <Text>{errorMsg}</Text>
             </View>
@@ -64,7 +71,12 @@ const AddressPage = (props) => {
     } else if (location) {
         return (
             <View>
-                <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
+                <Searchbar
+                        style={styles.input}
+                        placeholder="Search"
+                        onChangeText={onChangeAddress}
+                        value={address}
+                        /> 
                 <Button title="Search" onPress={onSearch} />
                 <MapView style={styles.map} 
                 region={location}
@@ -84,7 +96,7 @@ const AddressPage = (props) => {
 
 const styles = StyleSheet.create({
     input: {
-        height: 40,
+        height: 50,
         margin: 12,
         borderWidth: 1,
         padding: 10,

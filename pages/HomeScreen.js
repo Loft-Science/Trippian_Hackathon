@@ -1,17 +1,39 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground, TextInput, FlatList } from "react-native";
+import React, { useState,useRef,useMemo, useEffect, useCallback } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground, TextInput, FlatList, SafeAreaView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Provider } from "react-native-paper";
 import { Button, Icon } from "react-native-elements";
-import BottomSheet from "../components/BottomSheet";
 import { useFonts } from 'expo-font';
 import AddressPage from "./AddressPage";
+import Animated from 'react-native-reanimated';
+import {
+    BottomSheetModal,
+    BottomSheetModalProvider,
+  } from '@gorhom/bottom-sheet';
+
+
 
 let todayWeather = 10 + 17;
 let todayCondition = "Cloudy";
 
 const HomeScreen = ({ navigation }) => {
     const [show, setShow] = useState(false);
+
+
+                // ref
+            const bottomSheetModalRef = useRef(null);
+
+            // variables
+            const snapPoints = useMemo(() => ['50%'], []);
+
+            const openModal = useCallback(() => {
+                bottomSheetModalRef.current?.present();
+              }, []);
+              
+            
+
+
+    
 
     const [images, setimages] = useState([
         { src: require("../assets/profile1.jpg"), key: 1, name: "Chris" },
@@ -42,9 +64,22 @@ const HomeScreen = ({ navigation }) => {
         return (<AddressPage onDismiss={dismiss} />);
     }
     return (
-        <Provider>
+        <BottomSheetModalProvider> 
             <ScrollView style={styles.container}>
+
+            <BottomSheetModal
+                        ref={bottomSheetModalRef}
+                        index={0}
+                        snapPoints={snapPoints}
+                        style={styles.bottomSheet}
+                    >   <View style={styles.weather}>
+                    <Text> Awesome🎉</Text>
+                  </View>  </BottomSheetModal>
+
+                
+                
                 <View style={styles.header_container}>
+
                     <ImageBackground
                         source={require("../assets/Home_back_1.jpg")}
                         style={{ width: "100%", height: "100%", flex: 1, resizeMode: "cover", justifyContent: "center", backgroundColor: "black" }}
@@ -58,7 +93,7 @@ const HomeScreen = ({ navigation }) => {
                             buttonStyle={{ width: 350, height: 70, backgroundColor: "#ffffff", borderRadius: 5, margin: 30, alignSelf: "center" }}
                             titleStyle={{ padding: 30, color: "grey" }}
                             title="Where do you way to go?"
-                            onPress={showAddSection}
+                            onPress={openModal}
                         />
 
                         {/* <Searchbar
@@ -68,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
                         value={searchQuery}
                         /> */}
 
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={showAddSection}>
                             <Text style={styles.line}>I directly want to explore nearby..</Text>
                         </TouchableOpacity>
                     </ImageBackground>
@@ -76,6 +111,7 @@ const HomeScreen = ({ navigation }) => {
                 </View>
 
                 <View style={styles.inner_container}>
+                    
                     <Text style={styles.Trippian_title}>Meet Popular Trippians</Text>
 
                     <FlatList
@@ -182,9 +218,15 @@ const HomeScreen = ({ navigation }) => {
                             <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14, backgroundColor: "#ccc" }}></View>
                         </TouchableOpacity>
                     </ScrollView>
-                </View>                
+
+
+                    
+                </View>
+
+               
+                                
             </ScrollView>
-        </Provider>
+        </BottomSheetModalProvider>
     );
 };
 
@@ -307,5 +349,34 @@ const styles = StyleSheet.create({
         fontFamily: "Font-Text",
         fontSize: 20,
     },
+
+    bottom_header:{
+        backgroundColor: "#ffffff",
+        shadowColor: "#333333",
+        shadowOffset: {width: -1, height: -3},
+        shadowRadius : 2,
+        shadowOpacity: 0.4,
+        paddingTop:20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        
+
+    },
+
+    bottomSheet: {
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: -4,
+        },
+        shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+    
+
+
+   
 });
 export default HomeScreen;
