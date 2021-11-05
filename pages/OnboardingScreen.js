@@ -59,7 +59,6 @@ const OnboardingScreen = (props) => {
     });
 
 
-
     return (
         <Onboarding
         SkipButtonComponent={Skip}
@@ -77,7 +76,7 @@ const OnboardingScreen = (props) => {
             subtitle: ' ',
           },
           {
-            backgroundColor: '#fdeb93',
+            backgroundColor: '#ffffff',
             image: <Image source={require('../assets/onboarding-img2.png')} />,
             title: <Text style={styles.textContainer}> Experience{"\n"}       New {"\n"}    Culture </Text>,
             subtitle: ' ',
