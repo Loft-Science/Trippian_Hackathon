@@ -29,6 +29,7 @@
     "react-native-onboarding-swiper": "^1.1.4",
     "react-native-paper": "^4.9.2",
     "react-native-safe-area-context": "3.3.2",
+    "react-native-swipe-gestures": "^1.0.5",
     "react-native-web": "0.17.1",
     "styled-components": "^5.3.3",
     "weather-styled-icon": "^3.3.4"
