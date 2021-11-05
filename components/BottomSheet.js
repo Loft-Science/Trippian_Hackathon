@@ -2,8 +2,12 @@ import React, { useEffect, useState, useCallback } from "react";
 import { StyleSheet, View, Modal, Pressable, Text, Dimensions, TextInput, Button } from "react-native";
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
+import { Searchbar } from "react-native-paper";
 
 const BottomSheet = (props,{children}) => {
+    const bottomSheetGeight = Dimensions.get("window").height *0.5;
+    const deviceWidth = Dimensions.get("window").width;
+
     const dismiss = (e) => {
         props.onDismiss();
     };
@@ -62,11 +66,40 @@ const BottomSheet = (props,{children}) => {
                 animationType="slide"
                 visible={props.show}
                 onRequestClose={dismiss}
+                style={styles.modal}
             >
                 <View style={styles.container}>
-                    <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
-                    <Button title="Search" onPress={onSearch} />
-                    <Button title="Dismiss" onPress={dismiss} />
+                    <View style={[
+                        styles.header,
+                        {
+                            shadowOffset: {
+                                height: 3,
+                            }
+                        }
+                    ]}>
+                        <View style={{width:40, 
+                            position: "absolute", 
+                            top: 8, 
+                            left: (deviceWidth - 60)/2, 
+                            zIndex: 10,
+                            height: 3,
+                            borderRadius: 1.5,
+                            backgroundColor: "#cccccc"
+
+                            
+                            
+                            }}/>
+                    </View>
+
+                <Searchbar
+                        style={styles.input}
+                        placeholder="Search"
+                        onChangeText={onChangeAddress}
+                        value={address}
+                        /> 
+                
+                    <Button title="Search" onPress={onSearch} style={{margin: 5}} />
+                    <Button title="Dismiss" onPress={dismiss} style={{margin: 5}}/>
                     <Text>{errorMsg}</Text>
                 </View>
             </Modal>
@@ -77,11 +110,38 @@ const BottomSheet = (props,{children}) => {
                 animationType="slide"
                 visible={props.show}
                 onRequestClose={dismiss}
+                style={styles.modal}
             >
                 <View style={styles.container}>
-                    <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
-                    <Button title="Search" onPress={onSearch} />
-                    <Button title="Dismiss" onPress={dismiss} />
+                    <View style={[
+                        styles.header,
+                        {
+                            shadowOffset: {
+                                height: 3,
+                            }
+                        }
+                    ]}>
+                        <View style={{width:40, 
+                            position: "absolute", 
+                            top: 8, 
+                            left: (deviceWidth-60)/2, 
+                            zIndex: 10,
+                            height: 3,
+                            borderRadius: 1.5,
+                            backgroundColor: "#cccccc"
+
+                            
+                            
+                            }}/>
+                    </View>
+                <Searchbar
+                        style={styles.input}
+                        placeholder="Search"
+                        onChangeText={onChangeAddress}
+                        value={address}
+                        /> 
+                    <Button title="Search" onPress={onSearch} style={{margin: 5}}  />
+                    <Button title="Dismiss" onPress={dismiss} style={{margin: 5}}/>
                     <MapView style={styles.map} 
                 region={location}
                 />
@@ -94,11 +154,40 @@ const BottomSheet = (props,{children}) => {
                 animationType="slide"
                 visible={props.show}
                 onRequestClose={dismiss}
+                style={styles.modal}
             >
                 <View style={styles.container}>
-                    <TextInput style={styles.input} onChangeText={onChangeAddress} value={address}/>
-                    <Button title="Search" onPress={onSearch} />
-                    <Button title="Dismiss" onPress={dismiss} />
+                    <View style={[
+                        styles.header,
+                        {
+                            shadowOffset: {
+                                height: 3,
+                            }
+                        }
+                    ]}>
+                        <View style={{width:40, 
+                            position: "absolute", 
+                            top: 8, 
+                            left: (deviceWidth-60)/2, 
+                            zIndex: 10,
+                            height: 3,
+                            borderRadius: 1.5,
+                            backgroundColor: "#cccccc"
+
+                            
+                            
+                            }}/>
+                    </View>
+
+
+                <Searchbar
+                        style={styles.input}
+                        placeholder="Search"
+                        onChangeText={onChangeAddress}
+                        value={address}
+                        /> 
+                    <Button title="Search" onPress={onSearch} style={{margin: 5}} />
+                    <Button title="Dismiss" onPress={dismiss} style={{margin: 5}} />
                     <Text>{text}</Text>
                 </View>
             </Modal>
@@ -110,7 +199,7 @@ export default BottomSheet;
 
 const styles = StyleSheet.create({
     input: {
-        height: 40,
+        height: 50,
         margin: 12,
         borderWidth: 1,
         padding: 10,
@@ -125,4 +214,13 @@ const styles = StyleSheet.create({
       width: Dimensions.get('window').width,
       height: 200,
     },
+
+    header: {
+        height: 33,
+        backgroundColor: "#ffffff"
+    },
+    modal :{
+        marginTop: 20,
+        backgroundColor: "#ccc"
+    }
 });

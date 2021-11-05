@@ -1,7 +1,7 @@
 import React, { useState,useRef,useMemo, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground, TextInput, FlatList, SafeAreaView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Provider } from "react-native-paper";
+import { Modal, Provider } from "react-native-paper";
 import { Button, Icon } from "react-native-elements";
 import { useFonts } from 'expo-font';
 import AddressPage from "./AddressPage";
@@ -11,6 +11,7 @@ import {
     BottomSheetModal,
     BottomSheetModalProvider,
   } from '@gorhom/bottom-sheet';
+import LinearGradient from "react-native-linear-gradient"
 
 
 
@@ -71,6 +72,7 @@ const HomeScreen = ({ navigation }) => {
         'Font-Light' : require('../assets/fonts/Roboto-Light.ttf'),
         'Font-Regular' : require('../assets/fonts/Roboto-Regular.ttf'),
         'Font-Medium' : require('../assets/fonts/Roboto-Medium.ttf'),
+        'Font-Comforta' : require('../assets/fonts/Comfortaa-VariableFont_wght.ttf'),
 
     });
 
@@ -116,7 +118,7 @@ const HomeScreen = ({ navigation }) => {
                             buttonStyle={{ width: 350, height: 70, backgroundColor: "#ffffff", borderRadius: 5, margin: 30, alignSelf: "center" }}
                             titleStyle={{ padding: 30, color: "grey" }}
                             title="Where do you way to go?"
-                            onPress={openModal}
+                            onPress={showAddSection}
                         />
 
                         {/* <Searchbar
@@ -126,7 +128,7 @@ const HomeScreen = ({ navigation }) => {
                         value={searchQuery}
                         /> */}
 
-                        <TouchableOpacity onPress={showAddSection}>
+                        <TouchableOpacity onPress={openModal}>
                             <Text style={styles.line}>I directly want to explore nearby..</Text>
                         </TouchableOpacity>
                     </ImageBackground>
@@ -219,7 +221,7 @@ const HomeScreen = ({ navigation }) => {
                 
 
                     <Text style={styles.Trippian_Recommended}>The places to be definetly </Text>
-                    <Text style={styles.Trippian_Recommended}>from people like you!</Text>
+                    <Text style={styles.Trippian_description}>from people like you!</Text>
 
                     <FlatList
                         horizontal={true}
@@ -255,7 +257,7 @@ const HomeScreen = ({ navigation }) => {
                                          <View style={styles.cardText}>
                                              
                                    
-                                            <Icon style={{marginLeft: 15, marginTop:5}} name="people" type="octicons" color="#Cccccc" size={20} />
+                                            <Icon style={{marginLeft: 15, marginTop:5}} name="place" type="octicons" color="#Cccccc" size={20} />
                                             <Text style={styles.place_title}>{item.place}</Text>
                                             </View>
 
@@ -289,36 +291,77 @@ const HomeScreen = ({ navigation }) => {
                         {" "}
                     </FlatList>
 
+                   
+
+
+                    
+
+                    <SafeAreaView style={styles.Trippian_container}>
+
+                    <ImageBackground style={styles.aboutImage}  source={require('../assets/trippian_leader.jpg')} imageStyle={{ opacity: 0.7}}>
+                    
+
+            
+
+                    <ScrollView style={styles.Trippian_text}>
+
+                    <Text style={styles.Trippian_title2}>You can be Trippian :)</Text>
+
+            
+            
+                    <Text style={styles.desc01}>
+                        You can share whatever you experience{"\n"}
+                        that mad you happy{"\n"}
+                        Not only that, but you can have global friends{"\n"}
+                        at just your town!{"\n\n"}
+                        One more thing!{"\n"}
+                        There is a bonus, credit point.
+                    
+                    </Text>
+
+                    <Button 
+               
+                    buttonStyle={{ width: 200,
+                    height: 65,
+                    
+                    backgroundColor:"#ffffff",
+                    borderRadius:50,
+                    marginTop: 30,
+                    alignSelf: "center" }}
+                    titleStyle={{padding: 50}}
+                    title="More Info"
+                    titleStyle={{color: "#C882AF", fontSize: 20, fontFamily: "Font-Medium"}}
+            
+            />
+
+                    
+
+                    
+
+                        <View style={{padding : 60}}></View>
+
+                        
+
+         
+
+            
+
+            
+                </ScrollView>
+
+            
+
+                </ImageBackground>
+
+            </SafeAreaView>
+
+
+                    
 
 
 
 
-
-
-
-
-
-
-
-                    <Text style={styles.Trippian_Recommended}>Become a Trippian</Text>
-
-                    <ScrollView style={{ height: 260 }} horizontal indicatorStyle={"white"}>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <ImageBackground source={require("../assets/place1.jpg")} style={styles.Place_image} />
-
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14, backgroundColor: "#ccc" }}></View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14, backgroundColor: "#ccc" }}></View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14, backgroundColor: "#ccc" }}></View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.BestContainer}>
-                            <View style={{ flex: 1, alignItems: "flex-end", padding: 5, paddingRight: 14, backgroundColor: "#ccc" }}></View>
-                        </TouchableOpacity>
-                    </ScrollView>
+                
 
                 </View>
 
@@ -390,14 +433,14 @@ const styles = StyleSheet.create({
         
         marginTop: 25,
         marginLeft: 20,
-        fontFamily: 'Font-Bold'
+        fontFamily: 'Font-Comforta'
     },
 
     Trippian_description:{
         fontSize: 13,
         color:"black",
-        marginLeft: 20,
-        fontFamily: 'Font-Light'
+        marginLeft: 22,
+        fontFamily: 'Font-Comforta'
 
     },
 
@@ -436,7 +479,8 @@ const styles = StyleSheet.create({
         
         marginTop: 50,
         marginLeft: 20,
-        fontFamily: 'Font-Bold'
+        fontFamily: 'Font-Comforta',
+        
     },
 
     town_name: {
@@ -445,7 +489,7 @@ const styles = StyleSheet.create({
         color: "black",
         marginLeft: 30,
        
-        fontFamily: "Font-Title"
+        fontFamily: "Font-Bold"
 
 
     },
@@ -528,7 +572,7 @@ const styles = StyleSheet.create({
         color: "black",
         
         marginLeft: 20,
-        fontFamily: 'Font-Bold',
+        fontFamily: 'Font-Comforta',
         marginTop: 10,
     },
 
@@ -581,7 +625,68 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginTop: 25,
 
+  },
+  Trippian_container :{
+    flex:1,
+    backgroundColor:"#F2F2F2",
+    alignItems:"center",
+    borderRadius: 20,
+    width: 360,
+    height: 550,
+    alignSelf:"center",
+    margin: 20,
+    marginBottom: 150,
+    alignContent:"center"
+
+
+  },
+
+  Trippian_text: {
+    width:360,
+        height:550,
+        marginTop:50,
+        
+        paddingTop: 30,
+
+
+  },
+
+  aboutImage: {
+   
+    width: "100%", 
+    height: "100%", 
+    flex: 1, 
+    resizeMode: "cover", 
+    justifyContent: "center", 
+    backgroundColor: "#C882AF",
+    
+    borderBottomLeftRadius:40, borderBottomRightRadius:40 , borderTopLeftRadius: 40, borderTopRightRadius: 40
+                        
+
+    
+
+  },
+  desc01: {
+    textAlign:"center",
+    fontSize:15,
+    fontFamily: "Font-Bold",
+    paddingLeft:22,
+    paddingRight:22,
+    paddingTop: 50,
+    color: "white"
+
+  },
+  Trippian_title2:{
+
+    fontSize:25,
+    fontFamily: "Font-Comforta",
+    marginTop: 20,
+    color: "white",
+    alignSelf:"center"
+
+
   }
+
 
     
 
