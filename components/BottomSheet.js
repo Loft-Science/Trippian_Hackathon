@@ -1,22 +1,23 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { StyleSheet, View, Modal, Text, Dimensions, TextInput, Button, Image } from "react-native";
-import * as Location from 'expo-location';
-import MapView from 'react-native-maps';
-import { useFonts } from 'expo-font';
+import { StyleSheet, View, Modal, Text, Dimensions, TextInput, Button, Image, FlatList  } from "react-native";
+import * as Location from "expo-location";
+import MapView from "react-native-maps";
+import { useFonts } from "expo-font";
 import { Searchbar, IconButton } from "react-native-paper";
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures";
 
-const BottomSheet = (props,{children}) => {
+const BottomSheet = (props, { children }) => {
     const onSwipe = (gestureName, gestureState) => {
-        const {dy} = gestureState;
+        const { dy } = gestureState;
         if (dy > 0) {
-            props.onDismiss();
+            // props.onDismiss();
         }
     };
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [address, onChangeAddress] = useState("");
+    const [trippian, setTrippian] = useState([]);
     const [images, setimages] = useState([
         { src: require("../assets/clock-icon.png"), key: 1, name: "clock" },
         { src: require("../assets/search-icon.png"), key: 2, name: "search" },
@@ -30,13 +31,63 @@ const BottomSheet = (props,{children}) => {
     ]);
     const config = {
         velocityThreshold: 0.3,
-        directionalOffsetThreshold: 80
-    };    
+        directionalOffsetThreshold: 80,
+    };
     let [fontsLoaded] = useFonts({
-        'comfortaa': require('../assets/fonts/Comfortaa-VariableFont_wght.ttf'),
-        'roboto-regular': require('../assets/fonts/Roboto-Regular.ttf'),
-        'roboto-light':  require('../assets/fonts/Roboto-Light.ttf'),
+        comfortaa: require("../assets/fonts/Comfortaa-VariableFont_wght.ttf"),
+        "roboto-regular": require("../assets/fonts/Roboto-Regular.ttf"),
+        "roboto-light": require("../assets/fonts/Roboto-Light.ttf"),
     });
+    const fakeRecentData = [
+        {
+            id: 1,
+            keyword: "Paris",
+            result: "Paris, France"
+        },
+        {
+            id: 2,
+            keyword: "Pariser Strabe",
+            result: "Pariser Str, 60486 Frankfurt am Main, Germany"
+        },
+        {
+            id: 3,
+            keyword: "Paris' Bar",
+            result: "Oppenheimer Landstrabe 27, 60596 Frankfurt am Main, Germany"
+        }
+    ];
+    const fakeTrippianData = [
+        {
+            id: 1,
+            image: require("../assets/Karen.jpg"),
+            name: "Karen",
+            location: "California"
+        },
+        {
+            id: 2,            
+            image: require("../assets/Cigdem.jpg"),
+            name: "Cigdem",
+            location: "İstanbul"
+        },
+        {
+            id: 3,
+            image: require("../assets/Nana.jpg"),
+            name: "Nana",
+            location: "Ontario"
+        },
+        {
+            id: 4,
+            image: require("../assets/Chris.jpg"),
+            name: "Chris",
+            location: "Ontario"
+        },
+        {
+            id: 4,
+            image: require("../assets/Jungae.jpg"),
+            name: "Jungae",
+            location: "Seoul"
+        }
+    ]
+
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -66,19 +117,32 @@ const BottomSheet = (props,{children}) => {
     const onSearch = async (add) => {
         let loc = await Location.geocodeAsync(add);
         if (loc) {
-            if (loc.length>0) {
+            if (loc.length > 0) {
                 setLocation({
                     latitude: loc[0].latitude,
                     longitude: loc[0].longitude,
                     latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421
+                    longitudeDelta: 0.0421,
                 });
+                let geo = await Location.reverseGeocodeAsync(loc[0]);
+                if (geo) {
+                    console.log(geo);
+                    if (geo.length>0) {
+                        console.log(geo[0].region);
+                        let list = fakeTrippianData.filter(t=>t.location.toLowerCase().includes(geo[0].region.toLowerCase()));
+                        console.log(list);
+                        setTrippian(list);
+                    }
+                }
             } else {
                 setErrorMsg("Could not find this location");
             }
         } else {
             setErrorMsg("Could not find this location");
         }
+    };
+    const onSubmit = () => {
+        onSearch(address);
     }
 
     if (!fontsLoaded) {
@@ -87,67 +151,48 @@ const BottomSheet = (props,{children}) => {
 
     if (errorMsg) {
         return (
-            <Modal
-                animationType="slide"
-                visible={props.show}
-                onRequestClose={dismiss}
-                style={styles.modalWrapper}
-                transparent={true}
-            >
+            <Modal animationType="slide" visible={props.show} style={styles.modalWrapper} transparent={true}>
                 <View style={styles.container}>
                     <View style={styles.content}>
                         <Text>{errorMsg}</Text>
                     </View>
                 </View>
             </Modal>
-        )
+        );
     } else if (location) {
+        const renderTrippian = ({ item, index }) => (
+            <View style={styles.listElWrapper}>
+                <Text style={[styles.listNum, index==0?styles.listNumFirst:styles.listNumRest]}>{index+1}</Text>
+                <Image style={styles.listThumbnail} source={item.image}/>
+                <View style={styles.listTextFull}>
+                    <Text style={styles.listHighLight}>{item.name}</Text>
+                    <Text style={styles.listDesp}>{item.location}</Text>
+                </View>
+                <Image style={styles.mapIcon} source={images[2].src}/>
+            </View>
+        );
         return (
             <GestureRecognizer onSwipe={(direction, state) => onSwipe(direction, state)} config={config}>
-                <Modal
-                    transparent={true}
-                    animationType="slide"
-                    visible={props.show}
-                    style={styles.modalWrapper}
-                >
-                    <View style={styles.container}>                    
+                <Modal transparent={true} animationType="slide" visible={props.show} style={styles.modalWrapper}>
+                    <View style={styles.container}>
                         <View style={styles.content}>
-                            <View style={styles.topLine}/>
+                            <View style={styles.topLine} />
                             <View style={styles.inputWrapper}>
-                                <Image style={styles.searchIcon} source={images[1].src}/>
-                                <TextInput style={styles.input} onChangeText={()=>{}} placeholder="Where I go?"/>                                
+                                <Image style={styles.searchIcon} source={images[1].src} />
+                                <TextInput 
+                                style={styles.input} 
+                                placeholder="Where I go?" 
+                                onChangeText={onChangeAddress}
+                                onSubmitEditing={onSubmit}
+                                value={address}/>
                             </View>
-                            <MapView style={styles.map} 
-                                region={location}
-                            />
+                            <MapView style={styles.map} region={location} />
                             <View>
-                                <View style={styles.listElWrapper}>
-                                    <Text style={[styles.listNum, styles.listNumFirst]}>1</Text>
-                                    <Image style={styles.listThumbnail} source={images[3].src}/>
-                                    <View style={styles.listTextFull}>
-                                        <Text style={styles.listHighLight}>Hisu Lee</Text>
-                                        <Text style={styles.listDesp}>Asia, South Korea, Seoul</Text>
-                                    </View>
-                                    <Image style={styles.mapIcon} source={images[2].src}/>
-                                </View>
-                                <View style={styles.listElWrapper}>
-                                    <Text style={[styles.listNum, styles.listNumRest]}>2</Text>
-                                    <Image style={styles.listThumbnail} source={images[4].src}/>
-                                    <View style={styles.listTextFull}>
-                                        <Text style={styles.listHighLight}>Minh Lee</Text>
-                                        <Text style={styles.listDesp}>Asia, South Korea, Seoul</Text>
-                                    </View>
-                                    <Image style={styles.mapIcon} source={images[2].src}/>
-                                </View>
-                                <View style={styles.listElWrapper}>
-                                    <Text style={[styles.listNum, styles.listNumRest]}>3</Text>
-                                    <Image style={styles.listThumbnail} source={images[5].src}/>
-                                    <View style={styles.listTextFull}>
-                                        <Text style={styles.listHighLight}>Chris Kang</Text>
-                                        <Text style={styles.listDesp}>Asia, South Korea, Seoul</Text>
-                                    </View>
-                                    <Image style={styles.mapIcon} source={images[2].src}/>
-                                </View>
+                            <FlatList
+                                data={trippian}
+                                renderItem={renderTrippian}
+                                keyExtractor={item => item.id}
+                            />
                             </View>
                         </View>
                     </View>
@@ -155,157 +200,141 @@ const BottomSheet = (props,{children}) => {
             </GestureRecognizer>
         );
     } else {
+        const renderRecent = ({ item }) => (
+            <View style={styles.listElWrapper}>
+                <Image style={styles.clockIcon} source={images[0].src}/>
+                <View>
+                    <Text style={styles.listHighLight}>{item.keyword}</Text>
+                    <Text style={styles.listDesp} onPress={()=>{onSearch(item.result)}}>{item.result}</Text>
+                </View>
+            </View>
+        );
         return (
             <GestureRecognizer onSwipe={(direction, state) => onSwipe(direction, state)} config={config}>
-                <Modal
-                    transparent={true}
-                    animationType="slide"
-                    visible={props.show}
-                    style={styles.modalWrapper}
-                >
-                    <View style={styles.container}>                    
+                <Modal transparent={true} animationType="slide" visible={props.show} style={styles.modalWrapper}>
+                    <View style={styles.container}>
                         <View style={styles.content}>
-                            <View style={styles.topLine}/>
+                            <View style={styles.topLine} />
                             <View style={styles.inputWrapper}>
-                                <Image style={styles.searchIcon} source={images[1].src}/>
-                                <TextInput style={styles.input} onChangeText={()=>{}} placeholder="Where I go?"/>                                
+                                <Image style={styles.searchIcon} source={images[1].src} />
+                                <TextInput 
+                                style={styles.input} 
+                                placeholder="Where I go?" 
+                                onChangeText={onChangeAddress}
+                                onSubmitEditing={onSubmit}
+                                value={address}/>
                             </View>
                             <View>
                                 <Text style={styles.textTitle}>Recent Researches</Text>
-                                <View style={styles.listElWrapper}>
-                                    <Image style={styles.clockIcon} source={images[0].src}/>
-                                    <View>
-                                        <Text style={styles.listHighLight}>Paris</Text>
-                                        <Text style={styles.listDesp} onPress={()=>{onSearch("Paris, France")}}>Paris, France</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.listElWrapper}>
-                                    <Image style={styles.clockIcon} source={images[0].src}/>
-                                    <View>
-                                        <Text style={styles.listHighLight}>Pariser Strabe</Text>
-                                        <Text style={styles.listDesp}>Pariser Str, 60486 Frankfurt am Main, Germany</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.listElWrapper}>
-                                    <Image style={styles.clockIcon} source={images[0].src}/>
-                                    <View>
-                                        <Text style={styles.listHighLight}>Paris' Bar</Text>
-                                        <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 Frankfurt am Main, Germany</Text>
-                                    </View>
-                                </View>
+                                <FlatList
+                                    style={{backgroundColor: "#fff"}}
+                                    data={fakeRecentData}                                    
+                                    renderItem={renderRecent}
+                                    keyExtractor={item => item.id}
+                                />
                             </View>
 
-                            <View style={{marginTop: 20}}>
+                            <View style={{ marginTop: 20 }}>
+                                <Text style={styles.textTitle}>Popular Searches</Text>
 
-                            <Text style={styles.textTitle}>Popular Searches</Text>
-
-
-                            <View style={styles.listElWrapper}>
-                                <View style={{width: 30, height: 30, borderRadius: 60, marginTop: -50, marginEnd: -15,
-                                   backgroundColor:"#ccc",  justifyContent: "center" , alignItems: 'center',
-                                    opacity:0.7,
-                                    shadowColor: "#ccc",
-                                    shadowOffset: {
-                                    width: 0,
-                                    height: -4,
-                                    },
-                                    shadowOpacity: 0.25,
-                                shadowRadius: 4,
-                                elevation: 5, }}>
-                                    <Text style={{fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>1</Text>
-                                </View>
-                                    <Image style={styles.place_Icon} source={images[7].src}/>
+                                <View style={styles.listElWrapper}>
+                                    <View
+                                        style={{
+                                            width: 30,
+                                            height: 30,
+                                            borderRadius: 60,
+                                            marginTop: -50,
+                                            marginEnd: -15,
+                                            backgroundColor: "#ccc",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            opacity: 0.7,
+                                            shadowColor: "#ccc",
+                                            shadowOffset: {
+                                                width: 0,
+                                                height: -4,
+                                            },
+                                            shadowOpacity: 0.25,
+                                            shadowRadius: 4,
+                                            elevation: 5,
+                                        }}
+                                    >
+                                        <Text style={{ fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>1</Text>
+                                    </View>
+                                    <Image style={styles.place_Icon} source={images[7].src} />
                                     <View>
                                         <Text style={styles.listHighLight}>Pillipin, sebu</Text>
                                         <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
                                     </View>
                                 </View>
-
-
-                                
-
-
                             </View>
 
-
-                            <View style={{flexDirection: "row",
-                                            marginTop: defStyle.elementMargin,
-                                            width: Dimensions.get("window").width - 40,
-                                            alignItems: "center",}}>
-                            <View style={{width: 30, height: 30, borderRadius: 60, marginTop: -50, marginEnd: -15,
-                                   backgroundColor:"#ccc",  justifyContent: "center" , alignItems: 'center',
-                                    opacity:0.7,
-                                    shadowColor: "#ccc",
-                                    shadowOffset: {
-                                    width: 0,
-                                    height: -4,
-                                    },
-                                    shadowOpacity: 0.25,
-                                shadowRadius: 4,
-                                elevation: 5, }}>
-                                    <Text style={{fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>2</Text>
+                            <View style={{ flexDirection: "row", marginTop: defStyle.elementMargin, width: Dimensions.get("window").width - 40, alignItems: "center" }}>
+                                <View
+                                    style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 60,
+                                        marginTop: -50,
+                                        marginEnd: -15,
+                                        backgroundColor: "#ccc",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        opacity: 0.7,
+                                        shadowColor: "#ccc",
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: -4,
+                                        },
+                                        shadowOpacity: 0.25,
+                                        shadowRadius: 4,
+                                        elevation: 5,
+                                    }}
+                                >
+                                    <Text style={{ fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>2</Text>
                                 </View>
-                                <Image style={styles.place_Icon} source={images[6].src}/>
-                                    <View>
-                                        <Text style={styles.listHighLight}>Japan, Osaka</Text>
-                                        <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
-                                    </View>
-                                
-                            </View>
-
-
-                            <View style={{flexDirection: "row",
-                                            marginTop: defStyle.elementMargin,
-                                            width: Dimensions.get("window").width - 40,
-                                            alignItems: "center",}}>
-                            <View style={{width: 30, height: 30, borderRadius: 60, marginTop: -50, marginEnd: -15,
-                                   backgroundColor:"#ccc",  justifyContent: "center" , alignItems: 'center',
-                                    opacity:0.7,
-                                    shadowColor: "#ccc",
-                                    shadowOffset: {
-                                    width: 0,
-                                    height: -4,
-                                    },
-                                    shadowOpacity: 0.25,
-                                shadowRadius: 4,
-                                elevation: 5, }}>
-                                    <Text style={{fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>3</Text>
+                                <Image style={styles.place_Icon} source={images[6].src} />
+                                <View>
+                                    <Text style={styles.listHighLight}>Japan, Osaka</Text>
+                                    <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
                                 </View>
-                                <Image style={styles.place_Icon} source={images[8].src}/>
-                                    <View>
-                                        <Text style={styles.listHighLight}>Cheko, peulaha</Text>
-                                        <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
-                                    </View>
-                                
                             </View>
 
-
-
-
-
-                            
-
-
-                           
-
-
-                            
-
-
-
-
-                            
-
-
-
-
-
-
+                            <View style={{ flexDirection: "row", marginTop: defStyle.elementMargin, width: Dimensions.get("window").width - 40, alignItems: "center" }}>
+                                <View
+                                    style={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: 60,
+                                        marginTop: -50,
+                                        marginEnd: -15,
+                                        backgroundColor: "#ccc",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        opacity: 0.7,
+                                        shadowColor: "#ccc",
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: -4,
+                                        },
+                                        shadowOpacity: 0.25,
+                                        shadowRadius: 4,
+                                        elevation: 5,
+                                    }}
+                                >
+                                    <Text style={{ fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>3</Text>
+                                </View>
+                                <Image style={styles.place_Icon} source={images[8].src} />
+                                <View>
+                                    <Text style={styles.listHighLight}>Cheko, peulaha</Text>
+                                    <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </Modal>
             </GestureRecognizer>
-        )
+        );
     }
 };
 
@@ -325,21 +354,22 @@ const defStyle = {
     fontSizeHighlight: 18,
     fontSizeNormal: 15,
     elementBorderRadius: 25,
-}
+};
 const styles = StyleSheet.create({
     listTextFull: {
-        width: Dimensions.get("window").width - 20 - defStyle.elementMargin - 80,
+        width: Dimensions.get("window").width - 20 - defStyle.elementMargin - 90,
     },
     listNum: {
         fontFamily: defStyle.fontComfortaa,
-        fontSize:defStyle.fontSizeHighlight,
-        marginRight: defStyle.elementMargin / 2
+        fontSize: defStyle.fontSizeHighlight,
+        marginRight: defStyle.elementMargin / 2,
+        width: 10
     },
     listNumFirst: {
         color: defStyle.secondColor,
     },
     listNumRest: {
-        color:defStyle.thirdColor
+        color: defStyle.thirdColor,
     },
     textTitle: {
         fontFamily: defStyle.fontComfortaa,
@@ -353,20 +383,24 @@ const styles = StyleSheet.create({
         marginTop: defStyle.elementMargin,
         width: Dimensions.get("window").width - 40,
         alignItems: "center",
+        backgroundColor: "#fff",
     },
     listHighLight: {
         fontFamily: defStyle.fontComfortaa,
         fontSize: defStyle.fontSizeHighlight,
-        fontWeight: "bold"
+        fontWeight: "bold",
     },
     listDesp: {
-        fontFamily: defStyle.fontRobotoLight,
+        fontFamily: defStyle.fontRobotoNormal,
         fontSize: defStyle.fontSizeNormal,
     },
     listThumbnail: {
         width: 48,
-        height:48,
-        marginRight: defStyle.elementMargin / 2
+        height: 48,
+        resizeMode: "cover", 
+        justifyContent: "center",
+        marginRight: defStyle.elementMargin / 2,
+        borderRadius: 24
     },
     closeIcon: {
         position: "absolute",
@@ -378,10 +412,10 @@ const styles = StyleSheet.create({
         height: 23,
     },
     topLine: {
-        borderBottomColor: 'black',
+        borderBottomColor: "black",
         borderBottomWidth: 5,
         width: 134,
-        marginLeft: Dimensions.get("window").width/2-77,
+        marginLeft: Dimensions.get("window").width / 2 - 77,
         borderRadius: 10,
     },
     inputWrapper: {
@@ -429,31 +463,31 @@ const styles = StyleSheet.create({
         left: 0,
         width: Dimensions.get("window").width,
         height: "100%",
-        backgroundColor: '#00000080'
+        backgroundColor: "#00000080",
     },
     content: {
         borderColor: "#fff",
         backgroundColor: "#fff",
-        height: Dimensions.get('window').height - 40,
+        height: Dimensions.get("window").height - 40,
         borderWidth: 5,
         borderTopLeftRadius: 48,
         borderTopRightRadius: 48,
         paddingTop: 10,
         paddingLeft: 10,
         paddingRight: 10,
-        position: "relative"
+        position: "relative",
     },
     map: {
-      width: Dimensions.get('window').width,
-      height: 200,
+        width: Dimensions.get("window").width,
+        height: 200,
     },
     modalWrapper: {
-        margin: 0      
+        margin: 0,
     },
 
     place_Icon: {
         width: 60,
         height: 60,
-        marginEnd: 15
-    }
+        marginEnd: 15,
+    },
 });
