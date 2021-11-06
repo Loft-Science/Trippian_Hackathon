@@ -39,12 +39,13 @@ const HomeScreen = ({ navigation }) => {
     
 
     const [images, setimages] = useState([
-        { src: require("../assets/profile1.jpg"), key: 1, name: "Chris" },
-        { src: require("../assets/profile2.jpg"), key: 2, name: "Minah" },
-        { src: require("../assets/profile3.jpg"), key: 3, name: "Lisa" },
-        { src: require("../assets/profile4.jpg"), key: 4, name: "Julie" },
-        { src: require("../assets/profile5.jpg"), key: 5, name: "Jhon" },
-        { src: require("../assets/profile6.jpg"), key: 6, name: "Chris" },
+        { src: require("../assets/Karen.jpg"), key: 1, name: "Karen" },
+        { src: require("../assets/Cigdem.jpg"), key: 2, name: "Cigdem" },
+        { src: require("../assets/Nana.jpg"), key: 3, name: "Nana" },
+        { src: require("../assets/Daniel.jpg"), key: 4, name: "Daniel" },
+        { src: require("../assets/Jungae.jpg"), key: 5, name: "JungAe" },
+        { src: require("../assets/Jisung.jpg"), key: 6, name: "Jisung" },
+        { src: require("../assets/Chris.jpg"), key: 7, name: "Chris" },
     ]);
 
     const [towns, settowns] = useState([
@@ -220,7 +221,7 @@ const HomeScreen = ({ navigation }) => {
 
                 
 
-                    <Text style={styles.Trippian_Recommended}>The places to be definetly </Text>
+                    <Text style={styles.Trippian_Recommended}>Recommended places </Text>
                     <Text style={styles.Trippian_description}>from people like you!</Text>
 
                     <FlatList

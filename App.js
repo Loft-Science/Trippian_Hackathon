@@ -47,7 +47,7 @@ export default function App() {
     if (appIsReady) {      
       try {
         // uncomment code to test first time running
-        //await AsyncStorage.clear();
+        await AsyncStorage.clear();
         const value = await AsyncStorage.getItem("@trippian_first");
         if (value!==null) {
           setAppIsFirst(false);          

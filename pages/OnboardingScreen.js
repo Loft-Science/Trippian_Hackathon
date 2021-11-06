@@ -54,10 +54,15 @@ const OnboardingScreen = (props) => {
 
 
     let [fontsLoaded] = useFonts({
+
         'Font-Black': require('../assets/fonts/Roboto-Black.ttf'),
 
     });
 
+
+    if (!fontsLoaded) {
+        return null;
+    }
 
     return (
         <Onboarding
@@ -71,20 +76,20 @@ const OnboardingScreen = (props) => {
         pages={[
           {
             backgroundColor: '#C882AF',
-            image: <Image source={require('../assets/onboarding-img1.png')} />,
+            image: <Image source={require('../assets/onboarding2.jpg')} style={{width: 330, height: 200,  borderRadius: 20}} />,
             title: <Text style={styles.textContainer}>   Meet Your{"\n"}  Local Guide {"\n"}      Friend </Text>,
             subtitle: ' ',
           },
           {
             backgroundColor: '#ffffff',
-            image: <Image source={require('../assets/onboarding-img2.png')} />,
+            image: <Image source={require('../assets/onboarding.jpg')} style={{width: 330, height: 200, borderRadius: 20}} />,
             title: <Text style={styles.textContainer}> Experience{"\n"}       New {"\n"}    Culture </Text>,
             subtitle: ' ',
           },
           {
             backgroundColor: '#85C1D3',
-            image: <Image source={require('../assets/onboarding-img3.png')} />,
-            title: <Text style={styles.textContainer}>      Be {"\n"}   Better {"\n"} Yourself </Text>, 
+            image: <Image source={require('../assets/onboarding3.jpg')} style={{width: 330, height: 200,  borderRadius: 20}} />,
+            title: <Text style={styles.textContainer}>  Enjoy as You {"\n"}    are with a {"\n"} Colse Friend </Text>, 
             subtitle: "",
           },
         ]}
@@ -107,5 +112,6 @@ const styles = StyleSheet.create({
     fontSize: 35,
     marginTop: 20 ,
     fontFamily:'Font-Black',   
+
   }
 });

@@ -24,6 +24,9 @@ const BottomSheet = (props,{children}) => {
         { src: require("../assets/profile1.png"), key: 4, name: "profile1" },
         { src: require("../assets/profile2.png"), key: 5, name: "profile2" },
         { src: require("../assets/profile3.png"), key: 6, name: "profile3" },
+        { src: require("../assets/japan.jpg"), key: 7, name: "place1" },
+        { src: require("../assets/sebu.jpg"), key: 8, name: "place2" },
+        { src: require("../assets/checko.jpg"), key: 9, name: "place3" },
     ]);
     const config = {
         velocityThreshold: 0.3,
@@ -32,6 +35,7 @@ const BottomSheet = (props,{children}) => {
     let [fontsLoaded] = useFonts({
         'comfortaa': require('../assets/fonts/Comfortaa-VariableFont_wght.ttf'),
         'roboto-regular': require('../assets/fonts/Roboto-Regular.ttf'),
+        'roboto-light':  require('../assets/fonts/Roboto-Light.ttf'),
     });
     useEffect(() => {
         (async () => {
@@ -190,6 +194,113 @@ const BottomSheet = (props,{children}) => {
                                     </View>
                                 </View>
                             </View>
+
+                            <View style={{marginTop: 20}}>
+
+                            <Text style={styles.textTitle}>Popular Searches</Text>
+
+
+                            <View style={styles.listElWrapper}>
+                                <View style={{width: 30, height: 30, borderRadius: 60, marginTop: -50, marginEnd: -15,
+                                   backgroundColor:"#ccc",  justifyContent: "center" , alignItems: 'center',
+                                    opacity:0.7,
+                                    shadowColor: "#ccc",
+                                    shadowOffset: {
+                                    width: 0,
+                                    height: -4,
+                                    },
+                                    shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5, }}>
+                                    <Text style={{fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>1</Text>
+                                </View>
+                                    <Image style={styles.place_Icon} source={images[7].src}/>
+                                    <View>
+                                        <Text style={styles.listHighLight}>Pillipin, sebu</Text>
+                                        <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
+                                    </View>
+                                </View>
+
+
+                                
+
+
+                            </View>
+
+
+                            <View style={{flexDirection: "row",
+                                            marginTop: defStyle.elementMargin,
+                                            width: Dimensions.get("window").width - 40,
+                                            alignItems: "center",}}>
+                            <View style={{width: 30, height: 30, borderRadius: 60, marginTop: -50, marginEnd: -15,
+                                   backgroundColor:"#ccc",  justifyContent: "center" , alignItems: 'center',
+                                    opacity:0.7,
+                                    shadowColor: "#ccc",
+                                    shadowOffset: {
+                                    width: 0,
+                                    height: -4,
+                                    },
+                                    shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5, }}>
+                                    <Text style={{fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>2</Text>
+                                </View>
+                                <Image style={styles.place_Icon} source={images[6].src}/>
+                                    <View>
+                                        <Text style={styles.listHighLight}>Japan, Osaka</Text>
+                                        <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
+                                    </View>
+                                
+                            </View>
+
+
+                            <View style={{flexDirection: "row",
+                                            marginTop: defStyle.elementMargin,
+                                            width: Dimensions.get("window").width - 40,
+                                            alignItems: "center",}}>
+                            <View style={{width: 30, height: 30, borderRadius: 60, marginTop: -50, marginEnd: -15,
+                                   backgroundColor:"#ccc",  justifyContent: "center" , alignItems: 'center',
+                                    opacity:0.7,
+                                    shadowColor: "#ccc",
+                                    shadowOffset: {
+                                    width: 0,
+                                    height: -4,
+                                    },
+                                    shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5, }}>
+                                    <Text style={{fontFamily: defStyle.fontComfortaa, fontSize: 16 }}>3</Text>
+                                </View>
+                                <Image style={styles.place_Icon} source={images[8].src}/>
+                                    <View>
+                                        <Text style={styles.listHighLight}>Cheko, peulaha</Text>
+                                        <Text style={styles.listDesp}>Oppenheimer Landstrabe 27, 60596 {"\n"}Frankfurt am</Text>
+                                    </View>
+                                
+                            </View>
+
+
+
+
+
+                            
+
+
+                           
+
+
+                            
+
+
+
+
+                            
+
+
+
+
+
+
                         </View>
                     </View>
                 </Modal>
@@ -207,6 +318,7 @@ const defStyle = {
     shadowColor: "#ba81a3",
     fontComfortaa: "comfortaa",
     fontRobotoNormal: "roboto-regular",
+    fontRobotoLight: "roboto-light",
     sectionMargin: 20,
     elementMargin: 15,
     fontSizeTitle: 16,
@@ -248,7 +360,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     listDesp: {
-        fontFamily: defStyle.fontRobotoNormal,
+        fontFamily: defStyle.fontRobotoLight,
         fontSize: defStyle.fontSizeNormal,
     },
     listThumbnail: {
@@ -337,5 +449,11 @@ const styles = StyleSheet.create({
     },
     modalWrapper: {
         margin: 0      
+    },
+
+    place_Icon: {
+        width: 60,
+        height: 60,
+        marginEnd: 15
     }
 });
